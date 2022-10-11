@@ -6,7 +6,6 @@ import com.example.rest.model.Role;
 import com.example.rest.model.User;
 import com.example.rest.service.RoleService;
 import com.example.rest.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,7 @@ public class AdminRest {
     private final RoleService roleService;
 
 
-    @Autowired
+
     public AdminRest(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
