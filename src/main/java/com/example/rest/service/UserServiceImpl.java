@@ -4,20 +4,26 @@ package com.example.rest.service;
 import com.example.rest.dao.RoleDao;
 import com.example.rest.dao.UserDao;
 import com.example.rest.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserDao userDao;
     private final RoleDao roleDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.roleDao = roleDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -28,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(User user) {
         if (userDao.findByEmail(user.getEmail()) == null) {
-            user.setPassword(user.getPassword());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userDao.save(user);
         } else try {
             throw new Exception("Duplicate email!");
@@ -50,7 +56,7 @@ public class UserServiceImpl implements UserService {
         if (user.getPassword().equals("") || user.getPassword() == null) {
             user.setPassword(oldUser.getPassword());
         } else {
-            user.setPassword(user.getPassword());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         userDao.save(user);
 
@@ -73,6 +79,10 @@ userDao.deleteById(id);
 
     @Override
     public User findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userDao.findByEmail(email);
     }
 }

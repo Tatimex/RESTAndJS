@@ -8,6 +8,7 @@ import com.example.rest.service.RoleService;
 import com.example.rest.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -44,17 +45,17 @@ public class AdminRest {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-//    @GetMapping("/user")
-//    public User getUser(@AuthenticationPrincipal User user) {
-//        return user;
-//    }
+    @GetMapping("/user")
+    public User getUser(@AuthenticationPrincipal User user) {
+        return user;
+    }
 
-//    @GetMapping("/users/new")
-//    public User newUser() {
-//        User blankUser = new User();
-//        blankUser.setRoles(new HashSet<>(roleService.getAllRoles()));
-//        return blankUser;
-//    }
+    @GetMapping("/users/new")
+    public User newUser() {
+        User blankUser = new User();
+        blankUser.setRoles(new HashSet<>(roleService.getAllRoles()));
+        return blankUser;
+    }
 
     @PostMapping("/admin/users")
     public ResponseEntity<User> createUser(@RequestBody UserDto userDto) {

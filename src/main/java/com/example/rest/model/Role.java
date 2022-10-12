@@ -1,11 +1,13 @@
 package com.example.rest.model;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "roles")
-public class Role{
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +40,10 @@ public class Role{
         this.role = role;
     }
 
-//    @Override
-//    public String getAuthority() {
-//        return role;
-//    }
+    @Override
+    public String getAuthority() {
+        return role;
+    }
 
     @Override
     public String toString() {
