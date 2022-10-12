@@ -11,7 +11,7 @@ $(document).ready(function () {
             $('#deleteId').val(user.id);
             $('#deleteName').val(user.name);
             $('#deleteSurname').val(user.surname);
-            $('#deletePhone').val(user.phone);
+            $('#deleteAge').val(user.age);
             $('#deleteEmail').val(user.email);
             $('#deletePassword').val(user.password);
             $('#deleteLabel').text('Delete ' + user.id);
@@ -37,7 +37,7 @@ $(document).ready(function () {
     function getUserDataFromForm() {
         const form = document.getElementById("edit-user-form");
         console.log(form);
-        const {name, surname, phone, email, password, userRoles} = form;
+        const {name, surname, age, email, password, userRoles} = form;
 
         let rolesArr = [];
 
@@ -50,7 +50,7 @@ $(document).ready(function () {
         let userData = {
             name: name.value,
             surname: surname.value,
-            phone: phone.value,
+            age: age.value,
             email: email.value,
             password: password.value,
             rolesNames: rolesArr

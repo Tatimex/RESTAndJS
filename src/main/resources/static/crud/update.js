@@ -11,7 +11,7 @@ $(document).ready(function () {
             $('#showId').val(user.id);
             $('#editName').val(user.name);
             $('#editSurname').val(user.surname);
-            $('#editPhone').val(user.phone);
+            $('#editAge').val(user.age);
             $('#editEmail').val(user.email);
             // $('#editPassword').val(user.password);
             $('#editPassword').val("");
@@ -43,7 +43,7 @@ $(document).ready(function () {
     function getUserDataFromForm() {
         const form = document.getElementById("edit-user-form");
         console.log(form);
-        const {id, name, surname, phone, email, password, userRoles} = form;
+        const {id, name, surname, age, email, password, userRoles} = form;
 
         let rolesArr = [];
 
@@ -57,7 +57,7 @@ $(document).ready(function () {
             id: id.value,
             name: name.value,
             surname: surname.value,
-            phone: phone.value,
+            age: age.value,
             email: email.value,
             password: password.value,
             rolesNames: rolesArr
@@ -156,12 +156,12 @@ function insertUpdate_html(userId) {
                             
                             <div class="form-group">
                                 <label class="font-weight-bold"
-                                       for="editPhone">Phone</label>
+                                       for="editAge">Age</label>
                                 <input type="text"
-                                       name="phone"
-                                       id="editPhone"
+                                       name="age"
+                                       id="editAge"
                                        class="form-control"
-                                       th:value="${'user.phone'}"
+                                       th:value="${'user.age'}"
                                        required>
                             </div>
                             

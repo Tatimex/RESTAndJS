@@ -30,7 +30,7 @@ function showOneUser () {
     $('#oneUserId').text(oneUser.id);
     $('#oneUserName').text(oneUser.name);
     $('#oneUserSurname').text(oneUser.surname);
-    $('#oneUserPhone').text(oneUser.phone);
+    $('#oneUserAge').text(oneUser.age);
     $('#oneUserEmail').text(oneUser.email);
 
     let roles_html = "";

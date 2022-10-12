@@ -39,12 +39,12 @@ function insertNewUserTab_html() {
                                     </div>
                                     
                                     <div class="form-group">
-                                        <label class="font-weight-bold" for="phone">Phone</label>
+                                        <label class="font-weight-bold" for="age">Age</label>
                                         <input type="text"
-                                               name="phone"
+                                               name="age"
                                                class="form-control bg-warning"
-                                               id="phone"
-                                               placeholder="Phone"
+                                               id="age"
+                                               placeholder="Age"
                                                required>
                                     </div>
                                     
@@ -105,7 +105,7 @@ function insertNewUserTab_html() {
     const getUserDataFromForm = () => {
         const form = document.getElementById("add-new-user-form");
 
-        const {name, surname, phone, email, password, roles} = form;
+        const {name, surname, age, email, password, roles} = form;
 
         let rolesArr = [];
 
@@ -118,7 +118,7 @@ function insertNewUserTab_html() {
         let userData = {
             name: name.value,
             surname: surname.value,
-            phone: phone.value,
+            age: age.value,
             email: email.value,
             password: password.value,
             rolesNames: rolesArr

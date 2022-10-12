@@ -26,8 +26,8 @@ public class User implements UserDetails {
     @Column(name = "surname")
     private String surname;
 
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "age")
+    private String age;
 
     @Email
     @Column(name = "email")
@@ -47,10 +47,10 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String name, String surname, String phone, String email, String password, Set<Role> roles) {
+    public User(String name, String surname, String age, String email, String password, Set<Role> roles) {
         this.name = name;
         this.surname = surname;
-        this.phone = phone;
+        this.age = age;
         this.email = email;
         this.password = password;
         this.roles = roles;
@@ -59,7 +59,7 @@ public class User implements UserDetails {
     public User(UserDto userDto) {
         this.name = userDto.getName();
         this.surname = userDto.getSurname();
-        this.phone = userDto.getPhone();
+        this.age = userDto.getAge();
         this.email = userDto.getEmail();
         this.password = userDto.getPassword();
     }
@@ -89,12 +89,12 @@ public class User implements UserDetails {
         this.surname = surname;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getAge() {
+        return age;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setAge(String age) {
+        this.age = age;
     }
 
     public String getEmail() {
@@ -164,7 +164,7 @@ public class User implements UserDetails {
         return id == user.id &&
                 Objects.equals(name, user.name) &&
                 Objects.equals(surname, user.surname) &&
-                Objects.equals(phone, user.phone) &&
+                Objects.equals(age, user.age) &&
                 Objects.equals(email, user.email) &&
                 Objects.equals(password, user.password) &&
                 Objects.equals(roles, user.roles);
@@ -172,6 +172,6 @@ public class User implements UserDetails {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, surname, phone, email, password, roles);
+        return Objects.hash(id, name, surname, age, email, password, roles);
     }
 }

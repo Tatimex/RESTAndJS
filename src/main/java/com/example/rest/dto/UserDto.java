@@ -1,16 +1,12 @@
 package com.example.rest.dto;
 
 
-import com.example.rest.model.Role;
-
-import java.util.Set;
-
 public class UserDto {
 
     private Long id;
     private String name;
     private String surname;
-    private String phone;
+    private String age;
     private String email;
     private String password;
     private String[] rolesNames;
@@ -39,12 +35,12 @@ public class UserDto {
         this.surname = surname;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getAge() {
+        return age;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setAge(String age) {
+        this.age = age;
     }
 
     public String getEmail() {

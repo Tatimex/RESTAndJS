@@ -25,14 +25,14 @@ public class Init {
         admin.setEmail("admin@admin.com");
         admin.setName("Vasya");
         admin.setSurname("Vasin");
-        admin.setPhone("240-000");
+        admin.setAge("34");
         admin.setPassword("$2a$12$sn9KvEVkIANLssoCvEnh0.XqIxsE3BwaLt5qSltxaOj11eQoLCj8i"); //Password: user
 
         User user = new User();
         user.setEmail("user@user.com");
         user.setName("Petya");
         user.setSurname("Sidorov");
-        user.setPhone("13-01");
+        user.setAge("18");
 
         user.setPassword("$2a$12$sn9KvEVkIANLssoCvEnh0.XqIxsE3BwaLt5qSltxaOj11eQoLCj8i"); //Password: user
 
@@ -40,7 +40,7 @@ public class Init {
         user2.setEmail("user2@user2.com");
         user2.setName("Pasha");
         user2.setSurname("Petrov");
-        user2.setPhone("+7-905-015");
+        user2.setAge("55");
         user2.setPassword("$2a$12$sn9KvEVkIANLssoCvEnh0.XqIxsE3BwaLt5qSltxaOj11eQoLCj8i"); //Password: user
 
         Role role = new Role();

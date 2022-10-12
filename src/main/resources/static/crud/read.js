@@ -57,7 +57,7 @@ function showAdminPanel() {
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Surname</th>
-                                <th>Phone</th>
+                                <th>Age</th>
                                 <th>Email</th>
                                 <th>Roles</th>
                                 <th>Edit</th>
@@ -113,7 +113,7 @@ function readUsers() {
                             <td data-id>${user.id}</td>
                             <td>${user.name}</td>
                             <td>${user.surname}</td>
-                            <td>${user.phone}</td>
+                            <td>${user.age}</td>
                             <td>${user.email}</td>
                             <td>
                                 <div>
