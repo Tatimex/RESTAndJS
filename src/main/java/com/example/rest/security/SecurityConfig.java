@@ -1,5 +1,6 @@
 package com.example.rest.security;
 
+import com.example.rest.configs.SuccessUserHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +17,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
-    private final LoginSuccessHandler successUserHandler;
+    private final SuccessUserHandler successUserHandler;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public SecurityConfig(@Qualifier("userServiceImpl") UserDetailsService userDetailsService,
-                          LoginSuccessHandler successUserHandler, PasswordEncoder passwordEncoder1) {
+                          SuccessUserHandler successUserHandler, PasswordEncoder passwordEncoder1) {
         this.userDetailsService = userDetailsService;
         this.successUserHandler = successUserHandler;
         this.passwordEncoder = passwordEncoder1;
@@ -46,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .formLogin().loginPage("/login")
-                .successHandler(new LoginSuccessHandler())
+                .successHandler(new SuccessUserHandler())
                 .loginProcessingUrl("/login")
                 .usernameParameter("j_username")
                 .passwordParameter("j_password")
