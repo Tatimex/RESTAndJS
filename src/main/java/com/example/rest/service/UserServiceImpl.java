@@ -1,6 +1,5 @@
 package com.example.rest.service;
 
-
 import com.example.rest.dao.RoleDao;
 import com.example.rest.dao.UserDao;
 import com.example.rest.model.User;
@@ -74,13 +73,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void deleteUserById(Long id) {
-userDao.deleteById(id);
+        userDao.deleteById(id);
     }
 
     @Override
     public User findByEmail(String email) {
         return userDao.findByEmail(email);
     }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userDao.findByEmail(email);

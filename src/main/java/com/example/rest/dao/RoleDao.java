@@ -1,6 +1,5 @@
 package com.example.rest.dao;
 
-
 import com.example.rest.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 

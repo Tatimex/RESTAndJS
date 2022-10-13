@@ -1,6 +1,5 @@
 package com.example.rest.dto;
 
-
 public class UserDto {
 
     private Long id;

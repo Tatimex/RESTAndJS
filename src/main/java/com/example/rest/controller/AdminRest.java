@@ -1,6 +1,5 @@
 package com.example.rest.controller;
 
-
 import com.example.rest.dto.UserDto;
 import com.example.rest.model.Role;
 import com.example.rest.model.User;
@@ -21,8 +20,6 @@ public class AdminRest {
 
     private final UserService userService;
     private final RoleService roleService;
-
-
 
     public AdminRest(UserService userService, RoleService roleService) {
         this.userService = userService;

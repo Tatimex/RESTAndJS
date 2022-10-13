@@ -1,6 +1,5 @@
 package com.example.rest.configs;
 
-import com.example.rest.configs.SuccessUserHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +19,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public WebSecurityConfig(@Qualifier("userServiceImpl") UserDetailsService userDetailsService,
                              SuccessUserHandler successUserHandler, PasswordEncoder passwordEncoder1) {
         this.userDetailsService = userDetailsService;
