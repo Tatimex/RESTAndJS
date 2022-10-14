@@ -3,7 +3,6 @@ package com.example.rest.configs;
 import com.example.rest.model.Role;
 import com.example.rest.model.User;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -11,7 +10,6 @@ import javax.persistence.EntityManagerFactory;
 import java.util.Collections;
 
 @Component
-@Transactional
 public class Init {
     private final EntityManagerFactory entityManagerFactory;
 

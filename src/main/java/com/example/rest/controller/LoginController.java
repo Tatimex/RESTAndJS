@@ -1,4 +1,4 @@
-package com.example.rest.configs;
+package com.example.rest.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
