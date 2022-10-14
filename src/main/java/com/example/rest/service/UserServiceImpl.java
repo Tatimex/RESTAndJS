@@ -3,11 +3,13 @@ package com.example.rest.service;
 import com.example.rest.dao.RoleDao;
 import com.example.rest.dao.UserDao;
 import com.example.rest.model.User;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final RoleDao roleDao;
     private final PasswordEncoder passwordEncoder;
 
+    @Lazy
     public UserServiceImpl(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.roleDao = roleDao;
@@ -31,6 +34,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public void saveUser(User user) {
         if (userDao.findByEmail(user.getEmail()) == null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -43,6 +47,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public void updateUser(User user) {
         if (user.getId() == null) {
             try {
@@ -72,6 +77,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public void deleteUserById(Long id) {
         userDao.deleteById(id);
     }
