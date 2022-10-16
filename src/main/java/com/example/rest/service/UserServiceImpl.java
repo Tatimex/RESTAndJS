@@ -1,6 +1,5 @@
 package com.example.rest.service;
 
-import com.example.rest.dao.RoleDao;
 import com.example.rest.dao.UserDao;
 import com.example.rest.model.User;
 import org.springframework.context.annotation.Lazy;
@@ -77,7 +76,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public void deleteUserById(Long id) {
-
+        User user = getUserById(id);
+        if (user == null) {
+            try {
+                throw new Exception("There is no user with ID = " + id + " in Database");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         userDao.deleteById(id);
     }
 
