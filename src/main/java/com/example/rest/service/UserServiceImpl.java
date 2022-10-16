@@ -18,13 +18,11 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserDao userDao;
-    private final RoleDao roleDao;
     private final PasswordEncoder passwordEncoder;
 
     @Lazy
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
-        this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -79,6 +77,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public void deleteUserById(Long id) {
+
         userDao.deleteById(id);
     }
 
