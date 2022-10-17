@@ -16,13 +16,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
-    private final SuccessUserHandler successUserHandler;
     private final PasswordEncoder passwordEncoder;
 
-    public WebSecurityConfig(@Qualifier("userServiceImpl") UserDetailsService userDetailsService,
-                             SuccessUserHandler successUserHandler, PasswordEncoder passwordEncoder1) {
+    public WebSecurityConfig(@Qualifier("userServiceImpl") UserDetailsService userDetailsService, PasswordEncoder passwordEncoder1) {
         this.userDetailsService = userDetailsService;
-        this.successUserHandler = successUserHandler;
         this.passwordEncoder = passwordEncoder1;
     }
 
@@ -31,7 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
