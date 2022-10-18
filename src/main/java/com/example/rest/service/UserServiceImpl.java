@@ -1,6 +1,7 @@
 package com.example.rest.service;
 
 import com.example.rest.dao.UserDao;
+import com.example.rest.model.Role;
 import com.example.rest.model.User;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,12 +20,44 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserDao userDao;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
-    @Lazy
-    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
+
+    public UserServiceImpl(UserDao userDao, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @PostConstruct
+    @Transactional
+    public void postConstruct() {
+        User admin = new User();
+        admin.setEmail("admin@admin.com");
+        admin.setName("Vasya");
+        admin.setSurname("Vasin");
+        admin.setAge("34");
+        admin.setPassword("$2a$12$sn9KvEVkIANLssoCvEnh0.XqIxsE3BwaLt5qSltxaOj11eQoLCj8i"); //Password: user
+
+        User user = new User();
+        user.setEmail("user@user.com");
+        user.setName("Petya");
+        user.setSurname("Sidorov");
+        user.setAge("18");
+        user.setPassword("$2a$12$sn9KvEVkIANLssoCvEnh0.XqIxsE3BwaLt5qSltxaOj11eQoLCj8i"); //Password: user
+
+        Role role = new Role(1L, "ROLE_ADMIN");
+        Role role2 = new Role(2L, "ROLE_USER");
+
+        roleService.saveRole(role);
+        roleService.saveRole(role2);
+
+        admin.setRoles(Collections.singleton(role));
+        user.setRoles(Collections.singleton(role2));
+
+        userDao.save(admin);
+        userDao.save(user);
     }
 
     @Override
