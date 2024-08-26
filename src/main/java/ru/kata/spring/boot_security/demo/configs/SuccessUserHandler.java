@@ -14,9 +14,9 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        String redirectUrl = "/user";
+        String redirectUrl = "/api/user";
         if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-            redirectUrl = "/admin/all-users";
+            redirectUrl = "/api/admin/all-users";
         }
         response.sendRedirect(redirectUrl);
     }

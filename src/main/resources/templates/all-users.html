@@ -1,57 +1,296 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Admin Panel</title>-->
+<!--    &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+<!--</head>-->
+<!--<body>-->
+
+<!--&lt;!&ndash; Navbar for logout &ndash;&gt;-->
+<!--<nav class="navbar navbar-dark bg-dark">-->
+<!--    <span class="navbar-text" id="admin-info">-->
+<!--        &lt;!&ndash; Admin info will be dynamically inserted here &ndash;&gt;-->
+<!--    </span>-->
+<!--    <form th:action="@{/logout}" method="post" class="form-inline">-->
+<!--        <button type="submit" class="btn btn-outline-light">Logout</button>-->
+<!--    </form>-->
+<!--</nav>-->
+
+<!--<div class="container mt-4">-->
+<!--    <div class="row">-->
+<!--        &lt;!&ndash; Sidebar &ndash;&gt;-->
+<!--        <div class="col-2">-->
+<!--            <div class="nav flex-column nav-pills">-->
+<!--                <a class="nav-link active" href="#">Admin</a>-->
+<!--                <a class="nav-link" href="#">User</a>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Main Content &ndash;&gt;-->
+<!--        <div class="col-10">-->
+<!--            <h1>Admin panel</h1>-->
+
+<!--            &lt;!&ndash; Tabs for Users table and New User &ndash;&gt;-->
+<!--            <ul class="nav nav-tabs">-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link active" href="#userTableTab" data-toggle="tab">Users table</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="#newUserTab" data-toggle="tab">New User</a>-->
+<!--                </li>-->
+<!--            </ul>-->
+
+<!--            &lt;!&ndash; Tab Content &ndash;&gt;-->
+<!--            <div class="tab-content mt-3">-->
+<!--                &lt;!&ndash; Users Table &ndash;&gt;-->
+<!--                <div class="tab-pane fade show active" id="userTableTab">-->
+<!--                    <table class="table table-striped">-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>ID</th>-->
+<!--                            <th>Name</th>-->
+<!--                            <th>Age</th>-->
+<!--                            <th>Email</th>-->
+<!--                            <th>Roles</th>-->
+<!--                            <th>Edit</th>-->
+<!--                            <th>Delete</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody id="user-list">-->
+<!--                        &lt;!&ndash; Users will be dynamically inserted here &ndash;&gt;-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; New User Form &ndash;&gt;-->
+<!--                <div class="tab-pane fade" id="newUserTab">-->
+<!--                    <form id="user-form">-->
+<!--                        <div class="form-group">-->
+<!--                            <label for="name">Name</label>-->
+<!--                            <input type="text" class="form-control" id="name" name="name" required>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                            <label for="age">Age</label>-->
+<!--                            <input type="number" class="form-control" id="age" name="age" required>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                            <label for="email">Email</label>-->
+<!--                            <input type="email" class="form-control" id="email" name="email" required>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                            <label for="password">Password</label>-->
+<!--                            <input type="password" class="form-control" id="password" name="password" required>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                            <label for="roles">Roles</label>-->
+<!--                            <select multiple class="form-control" id="roles" name="roles">-->
+<!--                                <option value="ROLE_ADMIN">ADMIN</option>-->
+<!--                                <option value="ROLE_USER">USER</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                        <button type="submit" class="btn btn-success">Add new user</button>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Adding custom JavaScript file &ndash;&gt;-->
+<!--<script src="admin.js"></script>-->
+
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>All users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Logout</button>
-</form>
-
-<br/>
-
-<h1>Admin</h1>
-
-<div>
-    <table border="1" style="width:500px">
+<div class="container mt-5">
+    <h1>Admin Page</h1>
+    <button class="btn btn-primary mb-3" id="addUserBtn">Add New User</button>
+    <table class="table table-bordered" id="usersTable">
+        <thead>
         <tr>
+            <th>ID</th>
             <th>Name</th>
-            <th>Age</th>
             <th>Email</th>
-            <th>Password</th>
             <th>Roles</th>
-            <th>Edit</th>
-            <th>Delete</th>
+            <th>Actions</th>
         </tr>
-
-        <tr th:each="user : ${allUsers}">
-            <td th:utext="${user.name}">name</td>
-            <td th:utext="${user.age}">age</td>
-            <td th:utext="${user.email}">email</td>
-            <td th:utext="${user.password}">password</td>
-            <td>
-                <th:block th:each="role : ${user.getRoles()}">
-                    <span th:attr="data-role=${role.getRole()}" th:text="${role.getRole()}"></span>
-                </th:block>
-            </td>
-            <td>
-                <input type="button" value="Update"
-                       th:onclick="'window.location.href = \'' + @{/admin/updateInfo/{id} (id =${user.id})} + '\''"/>
-            </td>
-            <td>
-                <input type="button" value="Delete"
-                       th:onclick="'window.location.href = \'' + @{/admin/deleteUser/{id} (id =${user.id})} + '\''"/>
-            </td>
-        </tr>
-
+        </thead>
+        <tbody id="usersTableBody">
+        <!-- Rows will be inserted here by JavaScript -->
+        </tbody>
     </table>
 </div>
 
-<br>
+<!-- Modal for Add/Edit User -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Add/Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label for="userName">Name</label>
+                        <input type="text" class="form-control" id="userName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email</label>
+                        <input type="email" class="form-control" id="userEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userRoles">Roles</label>
+                        <select multiple class="form-control" id="userRoles" name="roles">
+                            <!-- Roles will be populated here by JavaScript -->
+                        </select>
+                    </div>
+                    <input type="hidden" id="userId" name="id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveUserBtn">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<input type="button" value="AddUser" onclick="window.location.href = 'addNewUser'"/>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const usersTableBody = document.getElementById("usersTableBody");
+        const addUserBtn = document.getElementById("addUserBtn");
+        const userModal = new bootstrap.Modal(document.getElementById("userModal"));
+        const userForm = document.getElementById("userForm");
+        const saveUserBtn = document.getElementById("saveUserBtn");
+        const userRoles = document.getElementById("userRoles");
 
+        // Fetch all users and populate the table
+        function loadUsers() {
+            fetch('/api/admin/all-users')
+                .then(response => response.json())
+                .then(users => {
+                    usersTableBody.innerHTML = '';
+                    users.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                                <td>${user.id}</td>
+                                <td>${user.name}</td>
+                                <td>${user.email}</td>
+                                <td>${user.roles.join(', ')}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm edit-btn" data-id="${user.id}">Edit</button>
+                                    <button class="btn btn-danger btn-sm delete-btn" data-id="${user.id}">Delete</button>
+                                </td>
+                            `;
+                        usersTableBody.appendChild(row);
+                    });
+
+                    document.querySelectorAll(".edit-btn").forEach(button => {
+                        button.addEventListener("click", editUser);
+                    });
+
+                    document.querySelectorAll(".delete-btn").forEach(button => {
+                        button.addEventListener("click", deleteUser);
+                    });
+                });
+        }
+
+        // Fetch all roles and populate the roles select
+        function loadRoles() {
+            fetch('/api/admin/roles')
+                .then(response => response.json())
+                .then(roles => {
+                    userRoles.innerHTML = '';
+                    roles.forEach(role => {
+                        const option = document.createElement('option');
+                        option.value = role.role;
+                        option.textContent = role.role;
+                        userRoles.appendChild(option);
+                    });
+                });
+        }
+
+        function addUser() {
+            userForm.reset();
+            document.getElementById("userId").value = '';
+            userModal.show();
+        }
+
+        function editUser(event) {
+            const userId = event.target.getAttribute('data-id');
+            fetch(`/api/admin/update-info/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("userId").value = data.user.id;
+                    document.getElementById("userName").value = data.user.name;
+                    document.getElementById("userEmail").value = data.user.email;
+
+                    const roles = Array.from(userRoles.options);
+                    roles.forEach(option => {
+                        option.selected = data.user.roles.includes(option.value);
+                    });
+
+                    userModal.show();
+                });
+        }
+
+        function saveUser() {
+            const formData = new FormData(userForm);
+            const id = formData.get("id");
+            const url = id ? `/api/admin/save-user` : `/api/admin/save-user`;
+
+            const userDTO = {
+                id: formData.get("id"),
+                name: formData.get("name"),
+                email: formData.get("email"),
+                roles: Array.from(userRoles.selectedOptions).map(option => option.value),
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userDTO),
+            }).then(() => {
+                userModal.hide();
+                loadUsers();
+            });
+        }
+
+        function deleteUser(event) {
+            const userId = event.target.getAttribute('data-id');
+            if (confirm("Are you sure you want to delete this user?")) {
+                fetch(`/api/admin/delete-user/${userId}`, {
+                    method: 'DELETE',
+                }).then(() => {
+                    loadUsers();
+                });
+            }
+        }
+
+        addUserBtn.addEventListener("click", addUser);
+        saveUserBtn.addEventListener("click", saveUser);
+
+        loadRoles();
+        loadUsers();
+    });
+</script>
 </body>
 </html>

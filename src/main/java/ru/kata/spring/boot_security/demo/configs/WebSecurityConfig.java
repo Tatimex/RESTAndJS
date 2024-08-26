@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.configs;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -29,23 +30,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/", "/index").permitAll()
+//                .antMatchers("/admin/**").hasRole("ADMIN")
+//                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+//                .anyRequest().authenticated()
+//
+//                .and()
+//                .formLogin()
+//                .loginPage("/login")
+//                .failureUrl("/login?error=true")
+//                .successHandler(successUserHandler)
+//                .permitAll()
+//                .and()
+//                .logout()
+//                .permitAll();
+//    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                .anyRequest().authenticated()
+                .anyRequest().permitAll() // Разрешить доступ ко всем запросам без аутентификации
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .failureUrl("/login?error=true")
-                .successHandler(successUserHandler)
-                .permitAll()
-                .and()
-                .logout()
-                .permitAll();
+                .csrf().disable(); // Отключить CSRF защиту
     }
 
 
@@ -61,5 +72,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
 
         return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }
