@@ -2,6 +2,8 @@ package com.example.rest.service;
 
 import com.example.rest.dao.RoleDao;
 import com.example.rest.model.Role;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +16,9 @@ import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
+
+    private static final Logger logger = LogManager.getLogger(RoleServiceImpl.class);
+
     private final RoleDao roleDao;
 
     public RoleServiceImpl(RoleDao roleDao) {
@@ -22,40 +27,66 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<Role> getAllRoles() {
-        return roleDao.findAll();
+        logger.info("Fetching all roles");
+        List<Role> roles = roleDao.findAll();
+        if (roles != null && !roles.isEmpty()) {
+            logger.info("Found {} roles", roles.size());
+        } else {
+            logger.warn("No roles found");
+        }
+        return roles;
     }
 
     @Override
     @Transactional
     public void saveRole(Role role) {
-        roleDao.save(role);
+        logger.info("Saving role: {}", role);
+        try {
+            roleDao.save(role);
+            logger.info("Role saved successfully");
+        } catch (Exception e) {
+            logger.error("Error saving role: {}", role, e);
+            throw e;
+        }
     }
 
     @Override
     @Transactional
     public void deleteRoleById(Long id) {
-        roleDao.deleteById(id);
+        logger.info("Deleting role with id: {}", id);
+        try {
+            roleDao.deleteById(id);
+            logger.info("Role with id {} deleted successfully", id);
+        } catch (Exception e) {
+            logger.error("Error deleting role with id: {}", id, e);
+            throw e;
+        }
     }
 
     @Override
     public Role getRoleById(Long id) {
-        Role role = null;
+        logger.info("Fetching role with id: {}", id);
         Optional<Role> optional = roleDao.findById(id);
         if (optional.isPresent()) {
-            role = optional.get();
+            Role role = optional.get();
+            logger.info("Role found: {}", role);
+            return role;
+        } else {
+            logger.warn("Role with id {} not found", id);
+            return null;
         }
-        return role;
     }
 
     @Override
     public Role getByRoleName(String roleName) {
-        return roleDao.findByRole(roleName);
+        logger.info("Fetching role with name: {}", roleName);
+        Role role = roleDao.findByRole(roleName);
+        if (role != null) {
+            logger.info("Role found: {}", role);
+        } else {
+            logger.warn("Role with name {} not found", roleName);
+        }
+        return role;
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
-
 }
 

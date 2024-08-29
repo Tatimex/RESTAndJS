@@ -3,6 +3,8 @@ package com.example.rest.service;
 import com.example.rest.dao.UserDao;
 import com.example.rest.model.Role;
 import com.example.rest.model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,10 +21,11 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
+
     private final UserDao userDao;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-
 
     public UserServiceImpl(UserDao userDao, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
@@ -30,105 +33,128 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostConstruct
-    @Transactional
-    public void postConstruct() {
-        User admin = new User();
-        admin.setEmail("admin@admin.com");
-        admin.setName("Vasya");
-        admin.setSurname("Vasin");
-        admin.setAge("34");
-        admin.setPassword("$2a$12$sn9KvEVkIANLssoCvEnh0.XqIxsE3BwaLt5qSltxaOj11eQoLCj8i"); //Password: user
-
-        User user = new User();
-        user.setEmail("user@user.com");
-        user.setName("Petya");
-        user.setSurname("Sidorov");
-        user.setAge("18");
-        user.setPassword("$2a$12$sn9KvEVkIANLssoCvEnh0.XqIxsE3BwaLt5qSltxaOj11eQoLCj8i"); //Password: user
-
-        Role role = new Role(1L, "ROLE_ADMIN");
-        Role role2 = new Role(2L, "ROLE_USER");
-
-        roleService.saveRole(role);
-        roleService.saveRole(role2);
-
-        admin.setRoles(Collections.singleton(role));
-        user.setRoles(Collections.singleton(role2));
-
-        userDao.save(admin);
-        userDao.save(user);
-    }
-
     @Override
     public List<User> getAllUsers() {
-        return userDao.findAll();
+        logger.info("Fetching all users");
+        List<User> users = userDao.findAll();
+        if (users != null && !users.isEmpty()) {
+            logger.info("Found {} users", users.size());
+        } else {
+            logger.warn("No users found");
+        }
+        return users;
     }
 
     @Override
     @Transactional
     public void saveUser(User user) {
+        logger.info("Attempting to save user: {}", user.getEmail());
         if (userDao.findByEmail(user.getEmail()) == null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userDao.save(user);
-        } else try {
-            throw new Exception("Duplicate email!");
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                userDao.save(user);
+                logger.info("User {} saved successfully", user.getEmail());
+            } catch (Exception e) {
+                logger.error("Error saving user: {}", user.getEmail(), e);
+                throw e;
+            }
+        } else {
+            logger.warn("Duplicate email detected for user: {}", user.getEmail());
+            try {
+                throw new Exception("Duplicate email!");
+            } catch (Exception e) {
+                logger.error("Exception thrown for duplicate email: {}", user.getEmail(), e);
+            }
         }
     }
 
     @Override
     @Transactional
     public void updateUser(User user) {
+        logger.info("Attempting to update user: {}", user.getEmail());
         if (user.getId() == null) {
+            logger.error("User ID is null for user: {}", user.getEmail());
             try {
                 throw new Exception("User not have ID!");
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Exception thrown: User not have ID for user: {}", user.getEmail(), e);
+            }
+        } else {
+            User oldUser = getUserById(user.getId());
+            if (user.getPassword().equals("") || user.getPassword() == null) {
+                user.setPassword(oldUser.getPassword());
+            } else {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+            try {
+                userDao.save(user);
+                logger.info("User {} updated successfully", user.getEmail());
+            } catch (Exception e) {
+                logger.error("Error updating user: {}", user.getEmail(), e);
+                throw e;
             }
         }
-        User oldUser = getUserById(user.getId());
-        if (user.getPassword().equals("") || user.getPassword() == null) {
-            user.setPassword(oldUser.getPassword());
-        } else {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-        userDao.save(user);
-
     }
 
     @Override
     public User getUserById(Long id) {
-        User user = null;
+        logger.info("Fetching user by ID: {}", id);
         Optional<User> optional = userDao.findById(id);
         if (optional.isPresent()) {
-            user = optional.get();
+            User user = optional.get();
+            logger.info("User found: {}", user.getEmail());
+            return user;
+        } else {
+            logger.warn("User with ID {} not found", id);
+            return null;
         }
-        return user;
     }
 
     @Override
     @Transactional
     public void deleteUserById(Long id) {
+        logger.info("Attempting to delete user by ID: {}", id);
         User user = getUserById(id);
         if (user == null) {
+            logger.error("User with ID {} not found", id);
             try {
                 throw new Exception("There is no user with ID = " + id + " in Database");
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Exception thrown: User not found for ID {}", id, e);
+            }
+        } else {
+            try {
+                userDao.deleteById(id);
+                logger.info("User with ID {} deleted successfully", id);
+            } catch (Exception e) {
+                logger.error("Error deleting user with ID {}", id, e);
+                throw e;
             }
         }
-        userDao.deleteById(id);
     }
 
     @Override
     public User findByEmail(String email) {
-        return userDao.findByEmail(email);
+        logger.info("Fetching user by email: {}", email);
+        User user = userDao.findByEmail(email);
+        if (user != null) {
+            logger.info("User found by email: {}", email);
+        } else {
+            logger.warn("User with email {} not found", email);
+        }
+        return user;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userDao.findByEmail(email);
+        logger.info("Loading user by username: {}", email);
+        User user = userDao.findByEmail(email);
+        if (user != null) {
+            logger.info("User loaded by username: {}", email);
+            return user;
+        } else {
+            logger.error("User with username {} not found", email);
+            throw new UsernameNotFoundException("User with email " + email + " not found");
+        }
     }
 }
